@@ -5,4 +5,4 @@ ${SOURCE_NIX}
 #
 # Preload required packages into nix-store
 #
-nix-shell "$ENVSDIR/default.nix"
+nix-shell "$ENVSDIR/dev.nix"

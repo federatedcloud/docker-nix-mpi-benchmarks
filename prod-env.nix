@@ -11,7 +11,8 @@ with import <nixpkgs> { };
     binutils
     gfortran
     openmpi
-    
+    openssh
+        
     ];
   };
 }

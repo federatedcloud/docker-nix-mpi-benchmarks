@@ -28,6 +28,7 @@ stdenv.mkDerivation {
     binutils
     gfortran
     openmpi
+    openssh
     
     # Benchmarking
     hpl
@@ -36,7 +37,8 @@ stdenv.mkDerivation {
   src = null;
   shellHook = ''
     export LANG=en_US.UTF-8
-    ln -sfn ${hpl.out}/bin/xhpl /usr/bin
+    ln -sfn ${hpl.out}/bin/xhpl ~/
   '';
 }
+#    ln -sfn ${hpl.out}/bin/xhpl /usr/bin
 #    ln -sfn ${osu-micro-benchmarks.out}/bin/* /usr/bin

@@ -101,12 +101,12 @@ COPY dev.nix $ENVSDIR/
 RUN echo "$SSH_PRIVATE_KEY" > ${HOME}/tmp_rsa && chmod 600 ${HOME}/tmp_rsa && \
   rm -f ${HOME}/tmp_rsa && sed -i '$d' ${SSHDIR}/config | sed -i '$d' ${SSHDIR}/config   
 
+# optional - Prep dev environment ahead of time
+RUN nix-shell ${ENVSDIR}/dev.nix
+
 USER root
 
 RUN passwd -d $nixuser
-
-# optional - Prep dev environment ahead of time
-RUN nix-shell ${ENVSDIR}/dev.nix
 
 # ------------------------------------------------------------
 # Entrypoint
