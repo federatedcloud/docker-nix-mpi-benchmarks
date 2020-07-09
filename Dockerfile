@@ -87,6 +87,7 @@ RUN chown -R ${nixuser}:${nixuser} ${HOME}/.openmpi
 
 # ------------------------------------------------------------
 # Any benchmarks specifics will go here
+ADD HPL.dat ${HOME}/
 # ------------------------------------------------------------
 # TODO: copy a runscript in!
 
