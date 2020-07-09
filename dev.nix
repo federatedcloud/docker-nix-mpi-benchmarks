@@ -31,12 +31,12 @@ stdenv.mkDerivation {
     
     # Benchmarking
     hpl
-    osu-micro-benchmarks
+    #osu-micro-benchmarks
   ];
   src = null;
   shellHook = ''
     export LANG=en_US.UTF-8
     ln -sfn ${hpl.out}/bin/xhpl /usr/bin
-    ln -sfn ${osu-micro-benchmarks.out}/bin/* /usr/bin
   '';
 }
+#    ln -sfn ${osu-micro-benchmarks.out}/bin/* /usr/bin

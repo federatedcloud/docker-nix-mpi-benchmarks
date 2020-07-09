@@ -8,9 +8,9 @@ FROM cornellcac/nix_alpine_base:0f566286984d3565f89262acb3186483832bdae8
 USER root
 ARG ADDUSER
 
-COPY Docker/config.nix $HOME/.config/nixpkgs/
-COPY Docker/prod-env.nix $ENVSDIR/
-COPY Docker/persist-env.sh $ENVSDIR/
+COPY config.nix $HOME/.config/nixpkgs/
+COPY prod-env.nix $ENVSDIR/
+COPY persist-env.sh $ENVSDIR/
 RUN chown -R $nixuser:$nixuser $ENVSDIR
 
 # for MPI orted daemon to properly spawn on worker containers, we need the orted binary on the noninteractive ssh PATH
@@ -65,12 +65,12 @@ ENV SSHDIR ${HOME}/.ssh/
 
 RUN mkdir -p ${SSHDIR}
 
-ADD Docker/ssh/config ${SSHDIR}/config
-ADD Docker/ssh/id_rsa.mpi ${SSHDIR}/id_rsa
-ADD Docker/ssh/id_rsa.mpi.pub ${SSHDIR}/id_rsa.pub
-ADD Docker/ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
+ADD ssh/config ${SSHDIR}/config
+ADD ssh/id_rsa.mpi ${SSHDIR}/id_rsa
+ADD ssh/id_rsa.mpi.pub ${SSHDIR}/id_rsa.pub
+ADD ssh/id_rsa.mpi.pub ${SSHDIR}/authorized_keys
 
-ADD Docker/mpi_hostfile ${HOME}/mpi_hostfile
+ADD mpi_hostfile ${HOME}/mpi_hostfile
 
 USER root
 
@@ -82,13 +82,13 @@ RUN chmod -R 600 ${SSHDIR}* && \
 # ------------------------------------------------------------
 
 RUN rm -fr ${HOME}/.openmpi && mkdir -p ${HOME}/.openmpi
-ADD Docker/default-mca-params.conf ${HOME}/.openmpi/mca-params.conf
+ADD default-mca-params.conf ${HOME}/.openmpi/mca-params.conf
 RUN chown -R ${nixuser}:${nixuser} ${HOME}/.openmpi
 
 # ------------------------------------------------------------
 # Any benchmarks specifics will go here
 # ------------------------------------------------------------
-
+# TODO: copy a runscript in!
 
 # ------------------------------------------------------------
 # Nix stuff
@@ -96,14 +96,17 @@ RUN chown -R ${nixuser}:${nixuser} ${HOME}/.openmpi
 USER $nixuser
 
 ARG SSH_PRIVATE_KEY
-COPY Docker/dev.nix $ENVSDIR/
+COPY dev.nix $ENVSDIR/
 #TODO: Running echo and rm in the same line seems to be fine. If this method does not work, I would look into Multi-stage builds in Docker 
 RUN echo "$SSH_PRIVATE_KEY" > ${HOME}/tmp_rsa && chmod 600 ${HOME}/tmp_rsa && \
   rm -f ${HOME}/tmp_rsa && sed -i '$d' ${SSHDIR}/config | sed -i '$d' ${SSHDIR}/config   
-  
+
 USER root
 
 RUN passwd -d $nixuser
+
+# optional - Prep dev environment ahead of time
+RUN nix-shell ${ENVSDIR}/dev.nix
 
 # ------------------------------------------------------------
 # Entrypoint
@@ -113,8 +116,8 @@ ENV TRIGGER 1
 
 
 #Copy this last to prevent rebuilds when changes occur in them:
-COPY Docker/entrypoint* $ENVSDIR/
-#COPY Docker/dev.nix $ENVSDIR/
+COPY entrypoint* $ENVSDIR/
+#COPY dev.nix $ENVSDIR/
 
 RUN chown $nixuser:$nixuser $ENVSDIR/entrypoint
 ENV PATH="${PATH}:/usr/local/bin"
