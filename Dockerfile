@@ -89,7 +89,6 @@ RUN chown -R ${nixuser}:${nixuser} ${HOME}/.openmpi
 # Any benchmarks specifics will go here
 # ------------------------------------------------------------
 ADD HPL.dat ${HOME}/
-ADD HPL2.dat ${HOME}/
 COPY HPL.dat ${HOME}/
 COPY HPL2.dat ${HOME}/
 COPY run-xhpl.sh ${HOME}/
