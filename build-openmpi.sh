@@ -48,7 +48,7 @@ git_image_tag()
 # Uncomment to test from command line:
 #git_image_tag
 
-## Docke image tagging
+## Docker image tagging
 REPO="cornellcac/nix-mpi-benchmarks"
 TAG=$(git_image_tag)
 export NIX_OMPI_IMAGE="${REPO}:${TAG}"

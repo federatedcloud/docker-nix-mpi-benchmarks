@@ -88,6 +88,10 @@ RUN chown -R ${nixuser}:${nixuser} ${HOME}/.openmpi
 # ------------------------------------------------------------
 # Any benchmarks specifics will go here
 # ------------------------------------------------------------
+COPY HPL.dat ${HOME}/
+COPY HPL2.dat ${HOME}/
+COPY run-xhpl.sh ${HOME}/
+RUN chmod 775 ${HOME}/run-xhpl.sh
 # TODO: copy a runscript in!
 
 # ------------------------------------------------------------
